@@ -2,11 +2,11 @@ import express , { Application, NextFunction, Request, Response} from "express";
 import helmet from "helmet";
 import rateLimit from 'express-rate-limit';
 import config from "./utils/env.config";
+import routes from "./routes";
 // -----------------------------------------------------
 
 // create my app
 const app: Application = express();
-
 /*
   Add Middlewares
 */
@@ -25,6 +25,8 @@ app.use(rateLimit({
 })); // Apply the rate limiting middleware to all requests
 
 // -------------------------------------------------------------------------------------
+
+app.use('/api', routes);
 
 app.use((_req: Request,  res:Response) => {
   res.status(404).json({message: "Sorry this api not found 😂"});
