@@ -24,8 +24,15 @@ app.use(rateLimit({
   message: "Too many requests , please try again later"
 })); // Apply the rate limiting middleware to all requests
 
+app.use((_req: Request,  res:Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  next()
+})
 // -------------------------------------------------------------------------------------
 
+// all routes
 app.use('/api', routes);
 
 app.use((_req: Request,  res:Response) => {
