@@ -3,8 +3,8 @@ type entityAppointment = {
   date_of_day : Date,
   start_time : Date,
   end_time : Date,
-  status: string,
-  number_of_patients: number,
+  status?: string,
+  number_of_patients?: number,
 }
 
 export default entityAppointment;
