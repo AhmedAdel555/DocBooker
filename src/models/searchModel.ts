@@ -1,30 +1,12 @@
 import doctor from "../types/doctorType"; 
+import searchParameters from "../types/searchParametersType";
 import db from "../database";
 class Search{
 
-  public async searchForDoctor(specilization:string, state:string, city:string, name:string): Promise<doctor[]>{
+  public async searchForDoctor(searchParameters: searchParameters): Promise<doctor[]>{
         try{
           const connection = await db.connect()
-          let sql = `SELECT DISTINCT(doc_id) , name, main_specialization, description, gender, rate 
-                      FROM doctor join entity on doctor.id = entity.doc_id
-                      WHERE 1 = 1`
-          const params = [];
-          if (specilization){
-            sql += ` AND main_specialization = $${params.length+1}`;
-            params.push(specilization);
-          }
-          if (state){
-            sql += ` AND state = $${params.length+1}`;
-            params.push(state);
-          }
-          if (city){
-            sql += ` AND city = $${params.length+1}`;
-            params.push(city);
-          }
-          if (name){
-            sql += ` AND name like $${params.length+1}`;
-            params.push(`%${name}%`);
-          }
+          const [sql , params] = this.sqlSearchQuery(searchParameters); 
           const result = await connection.query(sql, params);
           connection.release();
           return result.rows;
@@ -32,5 +14,23 @@ class Search{
           throw new Error((err as Error).message);
         }
   }
+
+  private sqlSearchQuery(searchParameters: searchParameters) : [string, string[]]{
+      let sql = `SELECT DISTINCT(doc_id) , name, main_specialization, description, gender, rate 
+                FROM doctor join entity on doctor.id = entity.doc_id
+                WHERE 1 = 1`
+      const params:string[] = [];
+      for(let [key, value] of Object.entries(searchParameters)){
+        if(value){
+          sql += ` AND ${key} = $${params.length+1}`;
+          if(key === 'name'){
+            params.push(`%${name}%`);
+            continue;
+          }
+          params.push(value);
+        }
+      }
+      return [sql , params];
+  } 
 }
 export default Search;

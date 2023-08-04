@@ -1,12 +1,12 @@
 import db from "../database";
 import entityAppointment from "../types/entityAppointmentType";
-class Booking{
+class BookingServices{
 
   private static listOfCurrentBookings: Map<string, boolean> = new Map();
   
   public async book_appointment(appointment: entityAppointment, clin_id:string): Promise<string>{
     try{
-      Booking.listOfCurrentBookings.set(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`, true);
+      BookingServices.listOfCurrentBookings.set(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`, true);
       const connection = await db.connect();
       const result1 = await connection.query(`SELECT status, number_of_patients from entity_appointment WHERE ent_id = $1 AND date_of_day = $2 AND start_time = $3 AND end_time = $4; `, 
       [appointment.ent_id, appointment.date_of_day, appointment.start_time, appointment.end_time]);
@@ -20,22 +20,20 @@ class Booking{
                                              returning id`, 
       [clin_id , appointment.ent_id, appointment.date_of_day, appointment.start_time, appointment.end_time]);
       console.log(result2);
-      // if(!(result1.rows[0].number_of_patients > result2.rows[0].count)){
-
-      // }
       const result3 = await connection.query(`UPDATE entity_appointment set status = 'unavailable' WHERE ent_id = $1 AND date_of_day = $2 AND start_time = $3 AND end_time = $4; `, [appointment.ent_id, appointment.date_of_day, appointment.start_time, appointment.end_time]);
       console.log(result3);
-      Booking.listOfCurrentBookings.delete(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`);
+      BookingServices.listOfCurrentBookings.delete(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`);
       connection.release()
       return result2.rows[0].id;
     }
     catch(error){
-      Booking.listOfCurrentBookings.delete(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`);
+      BookingServices.listOfCurrentBookings.delete(`${appointment.ent_id}-${appointment.date_of_day}-${appointment.start_time}`);
       throw new Error((error as Error).message);
     }
   }
 
-  public async cancel_appointment(appoint_id:string, client_id:string){
+  public async cancel_appointment(appoint_id:string, client_id:string)
+  {
     try{
       const connection = await db.connect();
       const clint_id = await connection.query('select clin_id from booking where id = $1', [appoint_id]);
@@ -55,6 +53,6 @@ class Booking{
     catch(error){
       throw new Error((error as Error).message);
     }
-  }  
+  } 
 }
-export default Booking;
+export default BookingServices;

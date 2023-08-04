@@ -4,6 +4,6 @@ import EntityController from "../../controllers/entityController";
 
 const routes = Router();
 
-routes.get('/entity/doctor/:docId', EntityController.doctorEntities)
+routes.get('/:entId/appointments' , EntityController.EntityAppointments);
 
 export default routes;

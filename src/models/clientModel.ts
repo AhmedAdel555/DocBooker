@@ -4,31 +4,13 @@ import bcrypt from 'bcrypt';
 import config from "../utils/env.config";
 class Client{
 
-  public async getClient(client_id:string) : Promise<client>{
+  public async getClient(client_id:string) : Promise<client | null>{
     try{
       const connection = await db.connect()
       const sql = `SELECT id, name, email, phone_number, city, street_address, points FROM client WHERE id = $1;`
       const result = await connection.query(sql, [client_id])
       connection.release()
       console.log(result.rows[0])
-      return result.rows[0]
-    }catch(error){
-      throw new Error((error as Error).message);
-    }
-  }
-
-  public async addClient(client: client) : Promise<client>{
-    try{
-      const connection = await db.connect()
-      const sql = `INSERT INTO client (name, email, password) 
-                    values ($1, $2, $3) 
-                    returning id, name, email;`
-      const result = await connection.query(sql, [
-        client.name,
-        client.email,
-        bcrypt.hashSync(`${client.password}${config.SECRETHASHINGKEY}`, 10)
-      ])
-      connection.release()
       return result.rows[0]
     }catch(error){
       throw new Error((error as Error).message);
