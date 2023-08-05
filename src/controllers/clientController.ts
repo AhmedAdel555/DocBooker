@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import AuthenticationClient from "../models/authClientModel";
-import client from "../types/clientType";
+import ClientBookings from "../models/clientBookings";
 import Jwt from "jsonwebtoken";
 import convig from '../utils/env.config';
 
@@ -43,6 +43,16 @@ class clientContoller {
           next(error);
         }
     }
+
+  public static async showBookings(req: Request, res: Response, next:NextFunction){
+      try{
+        const clientBookingsInstance = new ClientBookings();
+        const bookings = await clientBookingsInstance.getClientBooking(req.body.clientId);
+        return res.status(200).json({message: 'succeded', bookings:bookings});
+      }catch(error){
+        next(error)
+      }
+  }
 }
 
 export default clientContoller;

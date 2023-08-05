@@ -17,4 +17,5 @@ routes.post('/signin', [
   body("password").trim().isLength({min: 8}),
 ] ,clientController.signIn);
 
+routes.get('/bookings', clientController.showBookings);
 export default routes;

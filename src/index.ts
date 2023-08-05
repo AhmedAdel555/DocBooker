@@ -43,7 +43,7 @@ app.use((error: Error, _req: Request,  res:Response, _next: NextFunction) => {
     res.status(500).json({messgae: "Error in server" + error.message});
 });
 
-app.listen(config.PORT);
+app.listen(config.PORT ?? 3000);
 
 export default app;
 

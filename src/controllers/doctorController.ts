@@ -13,7 +13,7 @@ class DoctorController {
         return res.status(200).json({message: "succeded", doctor: doctor});
       }
       else{
-        res.status(404).json({message: "failed to find this doctor"})
+        return res.status(404).json({message: "failed to find this doctor"})
       }
     }catch(error){
       next(error)

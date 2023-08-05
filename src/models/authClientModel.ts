@@ -1,5 +1,4 @@
 import client from "../types/clientType";
-import Client from './clientModel';
 import db from "../database";
 import bcrypt from 'bcrypt';
 import config from "../utils/env.config";
@@ -48,9 +47,7 @@ class AuthenticationClient{
       }catch(error){
         throw new Error((error as Error).message);
       }
-  }
-
-    
+  }    
 }
 
 export default AuthenticationClient;

@@ -4,7 +4,7 @@ type entityAppointment = {
   start_time : Date,
   end_time : Date,
   status?: string,
-  number_of_patients?: number,
+  number_of_patients: number,
 }
 
 export default entityAppointment;
