@@ -6,3 +6,5 @@ type booking = {
   start_time : Date,
   end_time : Date,
 }
+
+export default booking;
