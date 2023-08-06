@@ -22,9 +22,12 @@ class Doctor{
       const doctors = await connection.query(sql, [doc_id])
       if(doctors.rows.length > 0){
         const sql2 = ` select sub_specialization from doc_sub_specializations where doc_id = $1;`
-        const subSpecializations = await connection.query(sql2, doctors.rows[0].id)
+        const subSpecializations = await connection.query(sql2, [doctors.rows[0].id]);
         connection.release()
-        return {...doctors.rows[0], subSpecializations: subSpecializations.rows} 
+        
+        return {...doctors.rows[0], subSpecializations: subSpecializations.rows.map((value) => {
+          return value.sub_specialization;
+        })} 
       }
       else{
         connection.release();

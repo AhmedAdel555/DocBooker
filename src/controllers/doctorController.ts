@@ -33,9 +33,9 @@ class DoctorController {
 
     public static async doctorEntities(req: Request, res: Response, next:NextFunction ){
       try{
-        const {docId} = req.params;
+        const {doctorId} = req.params;
         const doctorEntitiesInstance = new DoctorEntities();
-        const entities = await doctorEntitiesInstance.getEntitiesForDoctor(docId);
+        const entities = await doctorEntitiesInstance.getEntitiesForDoctor(doctorId);
         if(entities){
           return res.status(200).json({
             message: "succeded",
