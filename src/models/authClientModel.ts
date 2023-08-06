@@ -36,7 +36,7 @@ class AuthenticationClient{
         const result = await connection.query(sql, [clinetEmail]);
         if(result.rows.length > 0){
           const {id, name ,email,password} = result.rows[0];
-          if(bcrypt.compareSync(clientPassword , password)){
+          if(bcrypt.compareSync(`${clientPassword}${config.SECRETHASHINGKEY}`, password)){
             connection.release();
             const userInfo = {id:id, name:name, email:email};
             return userInfo;

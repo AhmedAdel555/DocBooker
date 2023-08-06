@@ -19,11 +19,12 @@ class AppointmentController {
       }
       const appointment:entityAppointment = {ent_id: req.body.ent_id, date_of_day: req.body.date_of_day, start_time:req.body.start_time, end_time:req.body.end_time, number_of_patients:req.body.number_of_patients};
       const newBooking = await bookingServices.book(appointment, req.body.clientId);
-      res.status(200).json({meesage: 'successfully', booking_id:newBooking});
+      res.status(200).json({meesage: 'successfully', newBooking:newBooking});
+      
+      // send email
       const notification = new NotifyByEmail();
       const clientInstanse = new Client();
-      const client = clientInstanse.getClient(req.body.clientId);
-      
+      const client = await clientInstanse.getClient(req.body.clientId);
       notification.sendEmail(client as unknown as client, "appointment booked");
 
     }catch(error){
@@ -40,8 +41,8 @@ class AppointmentController {
       else{
         bookingServices = new OnTimeAppointmentBookingService();
       }      
-      const deletedBooking = await bookingServices.cancel(req.body.appoint_id, req.body.clientId);
-      res.status(200).json({message: "booking succeffuly deleted", deletedBooking:deletedBooking});
+      await bookingServices.cancel(req.params.booking_id, req.body.clientId);
+      res.status(200).json({message: "booking succeffuly deleted"});
 
       const notification = new NotifyByEmail();
       const clientInstanse = new Client();

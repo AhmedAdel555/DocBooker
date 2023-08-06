@@ -3,10 +3,15 @@ import AuthenticationClient from "../models/authClientModel";
 import ClientBookings from "../models/clientBookings";
 import Jwt from "jsonwebtoken";
 import convig from '../utils/env.config';
+import {validationResult} from 'express-validator';
 
 class clientContoller {
   public static async signUp(req: Request, res: Response, next:NextFunction){
     try{
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(422).json({message: "please write correct email and password greater than 8 character"})
+      }
       const auth = new AuthenticationClient();
       const clientInfo = {...req.body};
       const newClient = await auth.register(clientInfo);
@@ -25,6 +30,10 @@ class clientContoller {
 
   public static async signIn(req: Request, res: Response, next:NextFunction){
         try{
+          const result = validationResult(req);
+          if (!result.isEmpty()) {
+            return res.status(422).json({message: "email or password is incorrect"})
+          }
           const {email, password} = req.body;
           const auth = new AuthenticationClient();
           const clientInfo = await auth.login(email, password);

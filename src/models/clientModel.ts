@@ -10,7 +10,6 @@ class Client{
       const sql = `SELECT id, name, email, phone_number, city, street_address, points FROM client WHERE id = $1;`
       const result = await connection.query(sql, [client_id])
       connection.release()
-      console.log(result.rows[0])
       return result.rows[0]
     }catch(error){
       throw new Error((error as Error).message);

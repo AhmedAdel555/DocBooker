@@ -5,7 +5,6 @@ import convig from '../utils/env.config';
 const validateAuthntivation = (req: Request, res: Response, next:NextFunction) => {
     try{
         const authHeader = req.get('Authorization');
-        console.log(authHeader)
         if(authHeader)
         {
           const bearer = authHeader.split(' ')[0].toLowerCase();

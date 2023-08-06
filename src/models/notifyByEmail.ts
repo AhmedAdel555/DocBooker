@@ -4,15 +4,21 @@ import convig from '../utils/env.config';
 class NotifyByEmail {
   private transporter = nodemailer.createTransport({
     service: 'gmail',
+    port: 587,
+    secure: false,
     auth: {
       user: `${convig.TRANSPORTEREMAIL}`,
       pass: `${convig.TRANSPORTERPASSWORD}`,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
   public sendEmail(client:client, message:string) : void{
+    console.log(client);
     const mailOptions: nodemailer.SendMailOptions = {
       from: `${convig.TRANSPORTEREMAIL}`,
-      to: `${client.email}`,
+      to: `hamadadola.2002@gmail.com`,
       subject: 'DoctorBooker.com',
       text: message,
     };

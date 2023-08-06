@@ -19,6 +19,11 @@ class OnTimeAppointmentBookingService extends BookingServices{
         // check for availability
         if(appointmentInfo.rows[0].status === 'unavailable'){
           connection.release();
+          let index = OnTimeAppointmentBookingService.listOfCurrentBookings.indexOf(appointmentKey);
+          if (index !== -1) 
+          {
+            OnTimeAppointmentBookingService.listOfCurrentBookings.splice(index, 1);
+          }
           throw new Error("this appointment not available");
         }
         // add booking
